@@ -23,6 +23,7 @@ router.post("/", function (req, res, next) {
     schedule_type: req.body.schedule_type,
     date: req.body.date,
     time: req.body.time,
+    userId: req.body.userId
   }
   req.db
     .collection("games")

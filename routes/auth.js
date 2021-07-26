@@ -3,19 +3,45 @@ const router = express.Router();
 
 const jwtManager = require('../jwt/jwtManager');
 
-router.post('/', function (req, res, next) {
-    req.db.collection('users').findOne({ 'email': req.body.email })
-        .then(doc => {
+router.post("/login", (req, res) => {
+    req.db
+        .collection("users")
+        .findOne({ email: req.body.email })
+        .then((data) => {
+            if (!data) throw new Error();
+            if (data && req.body.password === data.password) {
+                const payload = {};
+                payload.email = data.email;
+                payload.id = data._id;
+                const token = jwtManager.generate(payload);
+                res.json({ email: data.email, id: data._id, result: token });
+            } else throw new Error();
+        })
+        .catch((err) => {
+            res.json("error");
+        });
+});
+
+router.post("/signup", (req, res) => {
+
+    req.db
+        .collection("users")
+        .findOne({ email: req.body.email })
+        .then((doc) => {
             if (doc) {
-                const data = {};
-                data.email = doc.email;
-                data.password = doc.password;
-                const token = jwtManager.generate(data);
-                res.json({ data: token, status: 'success' });
+                res.json({ status: "exists" });
             } else {
-                res.json({ status: 'invalid_user' });
+                req.db
+                    .collection("users")
+                    .insertOne(req.body)
+                    .then((data) => {
+                        res.json({ status: "success" });
+                    }).catch(err => {
+                        res.json(err)
+                    });
             }
         });
 });
+
 
 module.exports = router;
