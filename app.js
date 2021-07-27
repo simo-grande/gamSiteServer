@@ -15,7 +15,8 @@ let connection;
 
 var gamesRouter = require("./routes/games");
 var usersRouter = require("./routes/users");
-var authRouter = require('./routes/auth')
+var quotesRouter = require("./routes/quotes");
+var authRouter = require("./routes/auth");
 
 var app = express();
 app.use(cors());
@@ -48,7 +49,8 @@ app.use("/", (req, res, next) => {
 
 app.use("/games", gamesRouter);
 app.use("/users", usersRouter);
-app.use('/auth', authRouter)
+app.use("/quotes", quotesRouter);
+app.use("/auth", authRouter);
 
 module.exports = app;
 

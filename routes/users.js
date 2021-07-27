@@ -1,3 +1,4 @@
+const { ObjectID } = require("bson");
 var express = require("express");
 var router = express.Router();
 
@@ -11,6 +12,16 @@ router.get("/", (req, res) => {
         status: "success",
         data: data,
       });
+    });
+});
+
+/**--Get User for Profile */
+router.get("/:id", (req, res) => {
+  req.db
+    .collection("users")
+    .findOne({ _id: new ObjectID(req.params.id) })
+    .then((data) => {
+      res.json({ result: "success", data: data });
     });
 });
 
