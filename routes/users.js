@@ -25,4 +25,18 @@ router.get("/:id", (req, res) => {
     });
 });
 
+/**--Change users password */
+router.put("/:id", (req, res) => {
+  req.db
+    .collection("users")
+    .updateOne({ _id: new ObjectID(req.params.id) },
+      { $set: { password: req.body.newPassword } })
+    .then((data) => {
+      res.json({ result: "success", data: data });
+    }).catch(err => {
+      res.json(err)
+    });
+});
+
+
 module.exports = router;
