@@ -1,11 +1,12 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
+const { ObjectID } = require("bson");
 
 /* GET All games. */
 router.get("/", (req, res) => {
   req.db
     .collection("games")
-    .find()
+    .find({ status: true })
     .toArray((err, data) => {
       res.json({
         status: "success",
@@ -24,8 +25,8 @@ router.post("/", function (req, res, next) {
     schedule_type: req.body.schedule_type,
     date: req.body.date,
     time: req.body.time,
-    userId: req.body.userId
-  }
+    userId: req.body.userId,
+  };
 
   req.db
     .collection("games")
@@ -43,10 +44,19 @@ router.post("/", function (req, res, next) {
       }
     });
 
+});
 
-
-
-
+/**---Remove a Game--- */
+router.delete("/:id", function (req, res) {
+  req.db
+    .collection("games")
+    .removeOne({ _id: new ObjectID(req.params.id) })
+    .then((data) => {
+      res.json({ status: "success" });
+    })
+    .catch((err) => {
+      res.json(err);
+    });
 });
 
 module.exports = router;
