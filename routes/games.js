@@ -6,7 +6,7 @@ const { ObjectID } = require("bson");
 router.get("/", (req, res) => {
   req.db
     .collection("games")
-    .find({ status: true })
+    .find()
     .toArray((err, data) => {
       res.json({
         status: "success",
